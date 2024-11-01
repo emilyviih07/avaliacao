@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação do filme</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff; /* Azul claro */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff; /* Azul mais forte */
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #007bff; 
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3; 
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda; 
+            color: #155724;
+        }
+        .danger {
+            background-color: #f8d7da;
+            color: #721c24; 
+        }
+        .warning {
+            background-color: #fff3cd; 
+            color: #856404; 
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            background-color: #e7f1ff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Avaliação do filme</h1>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              <div class="message {{ category }}">{{ message }}</div>
+          {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="text" name="title" placeholder="Título do Filme" required>
+        <input type="number" name="rating" placeholder="Nota (0-10)" min="0" max="10">
+        <button type="submit">Adicionar Filme</button>
+    </form>
+
+    <h2>Filmes Cadastrados</h2>
+    <ul>
+        {% for movie in movies %}
+          <li>
+              {{ movie.title }} - Nota: {{ movie.rating }}
+              <form method="POST" action="/delete" style="display:inline;">
+                  <input type="hidden" name="title" value="{{ movie.title }}">
+                  <button type="submit" style="background:none;border:none;color:#007bff;text-decoration:none;">Excluir</button>
+              </form>
+              <form method="POST" action="/update" style="display:inline;">
+                  <input type="hidden" name="oldtitle" value="{{ movie.title }}">
+                  <input type="text" name="newtitle" placeholder="Novo Título">
+                  <input type="number" name="newrating" placeholder="Nova Nota (0-10)" min="0" max="10">
+                  <button type="submit">Atualizar</button>
+              </form>
+          </li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>
